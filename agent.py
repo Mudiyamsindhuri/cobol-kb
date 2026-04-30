@@ -1,167 +1,256 @@
-from langgraph.graph import StateGraph, END
-from langchain_core.runnables import RunnableLambda
 from neo4j import GraphDatabase
 import requests
+import numpy as np
+import re
 
 # =============================
-# NEO4J CONNECTION
+# CONFIG
 # =============================
-driver = GraphDatabase.driver(
-    "bolt://localhost:7687",
-    auth=("neo4j", "password")
-)
+NEO4J_URI = "bolt://localhost:7687"
+USER = "neo4j"
+PASSWORD = "password"
 
-def run_query(cypher):
-    with driver.session() as session:
-        result = session.run(cypher)
-        return [r.data() for r in result]
+OLLAMA_URL = "http://localhost:11434/api/generate"
+EMBED_URL = "http://localhost:11434/api/embeddings"
 
-# =============================
-# LLM CALL (OLLAMA)
-# =============================
-def call_llm(prompt):
-    res = requests.post(
-        "http://localhost:11434/api/generate",
-        json={
-            "model": "gemma3:4b",
-            "prompt": prompt,
-            "stream": False
-        }
-    )
-    return res.json()["response"]
+MODEL = "gemma4:e2b"   
+EMBED_MODEL = "nomic-embed-text:latest"
+
+driver = GraphDatabase.driver(NEO4J_URI, auth=(USER, PASSWORD))
+
 
 # =============================
-# STEP 1: UNDERSTAND QUESTION
+# EMBEDDINGS
 # =============================
-def understand(state):
-    question = state["question"]
-
-    prompt = f"""
-You are a Neo4j expert.
-
-Your job: Convert user question into Cypher query.
-
-DATABASE STRUCTURE:
-- All nodes use label: Entity
-- Node property:
-    - name
-    - type (PROGRAM, COPYBOOK, FILE, PARAGRAPH)
-    - description
-
-STRICT RULES:
-- ALWAYS use: MATCH (n:Entity)
-- NEVER use labels like PROGRAM, FILE, etc.
-- ALWAYS filter using:
-    WHERE toLower(n.type) = '<type>'
-- ALWAYS return:
-    RETURN n.name, n.description
-- NO markdown
-- NO explanation
-- ONLY Cypher
-
-User Question:
-{question}
-
-Examples:
-
-List all programs
-MATCH (n:Entity)
-WHERE toLower(n.type) = 'program'
-RETURN n.name, n.description
-
-List all files
-MATCH (n:Entity)
-WHERE toLower(n.type) = 'file'
-RETURN n.name, n.description
-"""
-
-    cypher = call_llm(prompt).strip()
-
-    # SAFETY FIX (auto-correct if LLM fails)
-    if "MATCH (p:PROGRAM)" in cypher or "MATCH (p:" in cypher:
-        cypher = """
-MATCH (n:Entity)
-WHERE toLower(n.type) = 'program'
-RETURN n.name, n.description
-"""
-
-    return {
-        "cypher": cypher,
-        "question": question
-    }
-# =============================
-# STEP 2: RUN QUERY
-# =============================
-def clean_cypher(text):
-    text = text.replace("```cypher", "").replace("```", "").strip()
-
-    # Keep only from MATCH onwards
-    if "MATCH" in text:
-        text = text[text.index("MATCH"):]
-
-    return text.strip()
-
-def query_db(state):
-    cypher = clean_cypher(state["cypher"])
-    print("\nGenerated Cypher:\n", cypher)
-
+def get_embedding(text):
     try:
-        records = run_query(cypher)
+        res = requests.post(
+            EMBED_URL,
+            json={"model": EMBED_MODEL, "prompt": text}
+        )
 
-        if not records:
-            result = "No data found."
-        else:
-            result = "\n".join(
-                f"{r.get('n.name') or r.get('name')} : {r.get('n.description','')}"
-                for r in records
-            )
+        data = res.json()
+        emb = data.get("embedding", [])
+
+        if not emb:
+            print(f"⚠️ Empty embedding for: {text}")
+
+        return emb
 
     except Exception as e:
-        result = f"Error: {str(e)}"
+        print(" Embedding error:", e)
+        return []
 
-    return {
-        "result": result,
-        "question": state["question"]   
-    }
+
 # =============================
-# STEP 3: FORMAT ANSWER
+# COSINE SIMILARITY
 # =============================
-def format_answer(state):
+def cosine_similarity(a, b):
+    a = np.array(a)
+    b = np.array(b)
+
+    if len(a) == 0 or len(b) == 0:
+        return 0.0
+
+    return float(np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b)))
+
+
+# =============================
+# VECTOR SEARCH (RAG)
+# =============================
+def search_similar(query):
+
+    q_emb = get_embedding(query)
+
+    if not q_emb:
+        print(" Skipping vector search (no embedding)")
+        return []
+
+    cypher = """
+    MATCH (e:Entity)
+    WHERE e.embedding IS NOT NULL AND size(e.embedding) > 0
+    RETURN e.name AS name, e.type AS type, e.embedding AS embedding
+    """
+
+    with driver.session() as session:
+        rows = session.run(cypher).data()
+
+    scored = []
+
+    for r in rows:
+        score = cosine_similarity(q_emb, r["embedding"])
+        scored.append({
+            "name": r["name"],
+            "type": r["type"],
+            "score": score
+        })
+
+    scored.sort(key=lambda x: x["score"], reverse=True)
+
+    return scored[:10]
+
+
+# =============================
+# CONTEXT BUILDER
+# =============================
+def build_context(results):
+
+    if not results:
+        return None
+    context = "\n".join(
+        f"- {r['name']} ({r['type']})"
+        for r in results
+    )
+
+    return context
+
+
+# =============================
+# CLEAN OUTPUT (STRICT FORMAT)
+# =============================
+def clean_output(text):
+
+    
+    text = re.sub(r"\b\d{4,}\b", "", text)
+
+    
+    text = re.sub(r"(,\s*)?\d{3,}", "", text)
+
+    text = re.sub(r"\*{2,}", "", text)
+    text = re.sub(r"#{2,}", "", text)
+
+    
+    text = re.sub(r"As a senior.*?:", "", text, flags=re.IGNORECASE)
+
+    text = re.sub(r"\n\s*\n", "\n\n", text)
+    text = re.sub(r"\s+", " ", text).strip()
+
+    
+    if "Purpose:" not in text:
+        return "Improper format returned. Try again."
+
+    return text
+
+
+# =============================
+# LLM CALL
+# =============================
+def call_llm(prompt):
+
+    try:
+        res = requests.post(
+            OLLAMA_URL,
+            json={
+                "model": MODEL,
+                "prompt": prompt,
+                "stream": False,
+                "options": {
+                    "temperature": 0.2,
+                    "num_predict": 1024
+                }
+            }
+        )
+
+        data = res.json()
+
+        output = data.get("response") or data.get("message", {}).get("content", "")
+
+        if not output:
+            return "Empty response from model"
+
+        return clean_output(output)
+
+    except Exception as e:
+        return f"LLM Error: {e}"
+
+
+# =============================
+# AGENT LOGIC (WITH FALLBACK)
+# =============================
+def answer_question(question):
+
+    print("\n🔍 Running RAG pipeline...")
+
+    results = search_similar(question)
+    context = build_context(results)
+
+  
+    if not context:
+        print(" No context found → switching to LLM-only mode")
+
+        prompt = f"""
+You are a senior COBOL system architect.
+
+STRICT RULES:
+- DO NOT add introduction sentences
+- DO NOT add markdown or symbols
+- ONLY return structured output
+
+Question:
+{question}
+
+OUTPUT FORMAT:
+
+Purpose:
+<clear explanation>
+
+How it works:
+<step-by-step explanation>
+
+Where it is used:
+<specific usage>
+
+Impact on system:
+<system-level impact>
+"""
+        return call_llm(prompt)
+
+    # RAG MODE
     prompt = f"""
-User Question:
-{state['question']}
+You are a senior COBOL system architect.
 
-Database Result:
-{state['result']}
+STRICT RULES:
+- DO NOT add introduction sentences
+- DO NOT add markdown or symbols
+- ONLY use given context
+- ONLY return structured output
 
-Explain in simple English.
+Context:
+{context}
+
+Question:
+{question}
+
+OUTPUT FORMAT:
+
+Purpose:
+<clear explanation>
+
+How it works:
+<step-by-step explanation>
+
+Where it is used:
+<specific usage>
+
+Impact on system:
+<system-level impact>
 """
 
-    answer = call_llm(prompt)
-    return {"answer": answer}
+    return call_llm(prompt)
+
 
 # =============================
-# BUILD GRAPH
-# =============================
-builder = StateGraph(dict)
-
-builder.add_node("understand", understand)
-builder.add_node("query", query_db)
-builder.add_node("format", format_answer)
-
-builder.set_entry_point("understand")
-
-builder.add_edge("understand", "query")
-builder.add_edge("query", "format")
-builder.add_edge("format", END)
-
-graph = builder.compile()
-
-# =============================
-# RUN AGENT
+# MAIN LOOP
 # =============================
 if __name__ == "__main__":
+
+    print(" COBOL GraphRAG Agent Ready (Structured + Robust)")
+
     while True:
-        q = input("Ask: ")
-        result = graph.invoke({"question": q})
-        print("\nAnswer:", result["answer"])
+        q = input("\nAsk COBOL system: ")
+
+        if q.lower() in ["exit", "quit"]:
+            break
+
+        ans = answer_question(q)
+        print("\n Answer:\n", ans)

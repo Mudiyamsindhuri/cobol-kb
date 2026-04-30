@@ -1,0 +1,794 @@
+{
+  "nodes": [
+    {
+      "name": "ABNDPROC",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "ABNDINFO",
+      "type": "COPYBOOK"
+    },
+    {
+      "name": "DB2-DATE-REFORMAT",
+      "type": "DATA"
+    },
+    {
+      "name": "CUSTOMER",
+      "type": "FILE"
+    },
+    {
+      "name": "ACCOUNT",
+      "type": "FILE"
+    },
+    {
+      "name": "BNK1CAC",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "CREACC",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "PROCESS CICS",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "IDENTIFICATION DIVISION",
+      "type": "DIVISION"
+    },
+    {
+      "name": "ENVIRONMENT DIVISION",
+      "type": "DIVISION"
+    },
+    {
+      "name": "INPUT-OUTPUT SECTION",
+      "type": "SECTION"
+    },
+    {
+      "name": "DATA DIVISION",
+      "type": "DIVISION"
+    },
+    {
+      "name": "WORKING-STORAGE SECTION",
+      "type": "SECTION"
+    },
+    {
+      "name": "BNK1CCS",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "CICS",
+      "type": "FILE"
+    },
+    {
+      "name": "WORKING-STORAGE SECTION",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "INPUT-OUTPUT SECTION",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "DATA DIVISION",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "BNK1CRA",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "CICS-WORK-AREA",
+      "type": "DATA"
+    },
+    {
+      "name": "CICS-RESP",
+      "type": "DATA"
+    },
+    {
+      "name": "CICS-RESP2",
+      "type": "DATA"
+    },
+    {
+      "name": "FAIL-INFO",
+      "type": "DATA"
+    },
+    {
+      "name": "BNK1DAC",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "CICS",
+      "type": "SYSTEM"
+    },
+    {
+      "name": "BNK1DCS",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "NATIONAL",
+      "type": "SYMBOLS"
+    },
+    {
+      "name": "WS-CICS-WORK-AREA",
+      "type": "DATA"
+    },
+    {
+      "name": "WS-CICS-RESP",
+      "type": "DATA"
+    },
+    {
+      "name": "WS-CICS-RESP2",
+      "type": "DATA"
+    },
+    {
+      "name": "WS-FAIL-INFO",
+      "type": "DATA"
+    },
+    {
+      "name": "BNK1TFN",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "CICS-WorkArea",
+      "type": "DATA"
+    },
+    {
+      "name": "FailInfo",
+      "type": "DATA"
+    },
+    {
+      "name": "BNK1UAC",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "BNKMENU",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "CRDTAGY1",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "CRDTAGY2",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "CRDTAGY3",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "CRDTAGY4",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "CRDTAGY5",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "BMS application",
+      "type": "FILE"
+    },
+    {
+      "name": "DB2",
+      "type": "FILE"
+    },
+    {
+      "name": "ACCOUNT datastore",
+      "type": "FILE"
+    },
+    {
+      "name": "PROCTRAN datastore",
+      "type": "FILE"
+    },
+    {
+      "name": "CUSTOMER",
+      "type": "DATASTORE"
+    },
+    {
+      "name": "BMS",
+      "type": "APPLICATION"
+    },
+    {
+      "name": "PROCTRAN",
+      "type": "DATASTORE"
+    },
+    {
+      "name": "VSAM",
+      "type": "FILE"
+    },
+    {
+      "name": "Credit Agency",
+      "type": "SYSTEM"
+    },
+    {
+      "name": "CICS",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "DB2 datastore",
+      "type": "FILE"
+    },
+    {
+      "name": "Account",
+      "type": "FILE"
+    },
+    {
+      "name": "DELACC",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "Account Datastore",
+      "type": "FILE"
+    },
+    {
+      "name": "DELCUS",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "CICS",
+      "type": "ENVIRONMENT"
+    },
+    {
+      "name": "PROCTRAN",
+      "type": "FILE"
+    },
+    {
+      "name": "GETCOMPY",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "COMPANY-NAME",
+      "type": "VARIABLE"
+    },
+    {
+      "name": "GETSCODE",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "DFHCOMMAREA",
+      "type": "COPYBOOK"
+    },
+    {
+      "name": "INQACC",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "ACCDB2",
+      "type": "COPYBOOK"
+    },
+    {
+      "name": "DB2 Datastore",
+      "type": "FILE"
+    },
+    {
+      "name": "INQACCCU",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "INQCUST",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "CBL CICS",
+      "type": "COPYBOOK"
+    },
+    {
+      "name": "CBL SQL",
+      "type": "COPYBOOK"
+    },
+    {
+      "name": "Account record",
+      "type": "COPYBOOK"
+    },
+    {
+      "name": "UPDCUST",
+      "type": "PROGRAM"
+    },
+    {
+      "name": "Customer",
+      "type": "RECORD"
+    },
+    {
+      "name": "account_number",
+      "type": "VARIABLE"
+    },
+    {
+      "name": "amount",
+      "type": "VARIABLE"
+    },
+    {
+      "name": "PROCTRAN datastore",
+      "type": "DATASTORE"
+    }
+  ],
+  "relationships": [
+    {
+      "source": "ABNDPROC",
+      "target": "ABNDINFO",
+      "relation": "USES"
+    },
+    {
+      "source": "DB2-DATE-REFORMAT",
+      "target": "ABNDPROC",
+      "relation": "USES"
+    },
+    {
+      "source": "BANKDATA",
+      "target": "CUSTOMER",
+      "relation": "READS"
+    },
+    {
+      "source": "BANKDATA",
+      "target": "ACCOUNT",
+      "relation": "READS"
+    },
+    {
+      "source": "BNK1CAC",
+      "target": "CREACC",
+      "relation": "CALLS"
+    },
+    {
+      "source": "PROCESS CICS",
+      "target": "IDENTIFICATION DIVISION",
+      "relation": "CALLS"
+    },
+    {
+      "source": "PROCESS CICS",
+      "target": "ENVIRONMENT DIVISION",
+      "relation": "CALLS"
+    },
+    {
+      "source": "PROCESS CICS",
+      "target": "INPUT-OUTPUT SECTION",
+      "relation": "CALLS"
+    },
+    {
+      "source": "PROCESS CICS",
+      "target": "DATA DIVISION",
+      "relation": "CALLS"
+    },
+    {
+      "source": "PROCESS CICS",
+      "target": "WORKING-STORAGE SECTION",
+      "relation": "CALLS"
+    },
+    {
+      "source": "BNK1CCS",
+      "target": "CICS",
+      "relation": "USES"
+    },
+    {
+      "source": "BNK1CCS",
+      "target": "WORKING-STORAGE SECTION",
+      "relation": "CONTAINS"
+    },
+    {
+      "source": "BNK1CCS",
+      "target": "INPUT-OUTPUT SECTION",
+      "relation": "CONTAINS"
+    },
+    {
+      "source": "BNK1CCS",
+      "target": "DATA DIVISION",
+      "relation": "CONTAINS"
+    },
+    {
+      "source": "BNK1CRA",
+      "target": "CICS-WORK-AREA",
+      "relation": "USES"
+    },
+    {
+      "source": "CICS-RESP",
+      "target": "CICS-WORK-AREA",
+      "relation": "USES"
+    },
+    {
+      "source": "CICS-RESP2",
+      "target": "CICS-WORK-AREA",
+      "relation": "USES"
+    },
+    {
+      "source": "FAIL-INFO",
+      "target": "BNK1CRA",
+      "relation": "USES"
+    },
+    {
+      "source": "BNK1DAC",
+      "target": "CICS",
+      "relation": "CALLS"
+    },
+    {
+      "source": "BNK1DCS",
+      "target": "CICS",
+      "relation": "USES"
+    },
+    {
+      "source": "BNK1DCS",
+      "target": "NATIONAL",
+      "relation": "USES"
+    },
+    {
+      "source": "WS-CICS-RESP",
+      "target": "BNK1DCS",
+      "relation": "USES"
+    },
+    {
+      "source": "WS-CICS-RESP2",
+      "target": "BNK1DCS",
+      "relation": "USES"
+    },
+    {
+      "source": "BNK1TFN",
+      "target": "CICS-WorkArea",
+      "relation": "USES"
+    },
+    {
+      "source": "BNK1TFN",
+      "target": "FailInfo",
+      "relation": "USES"
+    },
+    {
+      "source": "BNK1UAC",
+      "target": "CICS",
+      "relation": "USES"
+    },
+    {
+      "source": "BNK1UAC",
+      "target": "WORKING-STORAGE SECTION",
+      "relation": "DEFINES"
+    },
+    {
+      "source": "BNK1UAC",
+      "target": "INPUT-OUTPUT SECTION",
+      "relation": "DEFINES"
+    },
+    {
+      "source": "BNK1UAC",
+      "target": "ENVIRONMENT DIVISION",
+      "relation": "DEFINES"
+    },
+    {
+      "source": "BNKMENU",
+      "target": "CICS",
+      "relation": "CALLS"
+    },
+    {
+      "source": "BNKMENU",
+      "target": "NATIONAL",
+      "relation": "USES"
+    },
+    {
+      "source": "WS-CICS-RESP",
+      "target": "BNKMENU",
+      "relation": "USES"
+    },
+    {
+      "source": "WS-CICS-RESP2",
+      "target": "BNKMENU",
+      "relation": "USES"
+    },
+    {
+      "source": "WS-FAIL-INFO",
+      "target": "BNKMENU",
+      "relation": "USES"
+    },
+    {
+      "source": "CREACC",
+      "target": "BMS application",
+      "relation": "READS"
+    },
+    {
+      "source": "CREACC",
+      "target": "DB2",
+      "relation": "READS"
+    },
+    {
+      "source": "CREACC",
+      "target": "ACCOUNT datastore",
+      "relation": "READS"
+    },
+    {
+      "source": "CREACC",
+      "target": "PROCTRAN datastore",
+      "relation": "READS"
+    },
+    {
+      "source": "CREACC",
+      "target": "ACCOUNT datastore",
+      "relation": "WRITES"
+    },
+    {
+      "source": "CREACC",
+      "target": "PROCTRAN datastore",
+      "relation": "WRITES"
+    },
+    {
+      "source": "BMS",
+      "target": "CUSTOMER",
+      "relation": "READS"
+    },
+    {
+      "source": "CUSTOMER",
+      "target": "VSAM",
+      "relation": "READS"
+    },
+    {
+      "source": "CUSTOMER",
+      "target": "DB2",
+      "relation": "READS"
+    },
+    {
+      "source": "CUSTOMER",
+      "target": "PROCTRAN",
+      "relation": "WRITES"
+    },
+    {
+      "source": "CUSTOMER",
+      "target": "Credit Agency",
+      "relation": "CALLS"
+    },
+    {
+      "source": "Credit Agency",
+      "target": "CUSTOMER",
+      "relation": "READS"
+    },
+    {
+      "source": "CUSTOMER",
+      "target": "CUSTOMER",
+      "relation": "UPDATES"
+    },
+    {
+      "source": "CICS",
+      "target": "DB2 datastore",
+      "relation": "READS"
+    },
+    {
+      "source": "CICS",
+      "target": "Account",
+      "relation": "READS"
+    },
+    {
+      "source": "CICS",
+      "target": "PROCTRAN datastore",
+      "relation": "WRITES"
+    },
+    {
+      "source": "DELACC",
+      "target": "Account Datastore",
+      "relation": "READS"
+    },
+    {
+      "source": "DELACC",
+      "target": "Account Datastore",
+      "relation": "WRITES"
+    },
+    {
+      "source": "DELCUS",
+      "target": "CICS",
+      "relation": "USES"
+    },
+    {
+      "source": "DELCUS",
+      "target": "PROCTRAN",
+      "relation": "WRITES"
+    },
+    {
+      "source": "GETCOMPY",
+      "target": "COMPANY-NAME",
+      "relation": "ASSIGN"
+    },
+    {
+      "source": "COMPANY-NAME",
+      "target": "CICS Bank Sample Application",
+      "relation": "VALUE"
+    },
+    {
+      "source": "GETSCODE",
+      "target": "DFHCOMMAREA",
+      "relation": "USES"
+    },
+    {
+      "source": "DFHCOMMAREA",
+      "target": "SORTCODE",
+      "relation": "CONTAINS"
+    },
+    {
+      "source": "INQACC",
+      "target": "ACCDB2",
+      "relation": "USES"
+    },
+    {
+      "source": "INQACC",
+      "target": "DB2 Datastore",
+      "relation": "READS"
+    },
+    {
+      "source": "INQACCCU",
+      "target": "ACCDB2",
+      "relation": "USES"
+    },
+    {
+      "source": "ACCDB2",
+      "target": "HOST-ACCOUNT-ROW",
+      "relation": "READS"
+    },
+    {
+      "source": "ACCDB2",
+      "target": "HV-ACCOUNT-CUST-NO",
+      "relation": "READS"
+    },
+    {
+      "source": "INQCUST",
+      "target": "CICS",
+      "relation": "USES"
+    },
+    {
+      "source": "INQCUST",
+      "target": "CUSTOMER",
+      "relation": "READS"
+    },
+    {
+      "source": "PROCESS CICS",
+      "target": "CBL CICS",
+      "relation": "USES"
+    },
+    {
+      "source": "PROCESS CICS",
+      "target": "CBL SQL",
+      "relation": "USES"
+    },
+    {
+      "source": "PROCESS CICS",
+      "target": "DB2 datastore",
+      "relation": "READS"
+    },
+    {
+      "source": "PROCESS CICS",
+      "target": "Account record",
+      "relation": "READS"
+    },
+    {
+      "source": "Account record",
+      "target": "DB2 datastore",
+      "relation": "WRITES"
+    },
+    {
+      "source": "UPDCUST",
+      "target": "Customer",
+      "relation": "USES"
+    },
+    {
+      "source": "PROCESS CICS",
+      "target": "account_number",
+      "relation": "READS"
+    },
+    {
+      "source": "PROCESS CICS",
+      "target": "amount",
+      "relation": "READS"
+    },
+    {
+      "source": "PROCESS CICS",
+      "target": "PROCTRAN datastore",
+      "relation": "UPDATES"
+    }
+  ],
+  "summaries": [
+    {
+      "file": "ABNDPROC.cbl",
+      "summary": "This program processes application abends and writes them to a centralized CF (KSDS) datastore."
+    },
+    {
+      "file": "BANKDATA.cbl",
+      "summary": "Batch program to initialise the data used in the bank application. Datastores populated by this program include CUSTOMER (VSAM) and ACCOUNT (DB2)."
+    },
+    {
+      "file": "BNK1CAC.cbl",
+      "summary": "This program verifies input and calls CREACC to add an account to the Account datastore."
+    },
+    {
+      "file": "BNK1CCA.cbl",
+      "summary": "This program lists accounts belonging to a specified customer number."
+    },
+    {
+      "file": "BNK1CCS.cbl",
+      "summary": "This program is the Create Customer program in the BANKING application within the BMS suite."
+    },
+    {
+      "file": "BNK1CRA.cbl",
+      "summary": "This is the Credit/Debit program in the BANKING application in the BMS suite."
+    },
+    {
+      "file": "BNK1DAC.cbl",
+      "summary": "This program is the Display Account program in the BANKING application within the BMS suite. It handles display requests and account deletion."
+    },
+    {
+      "file": "BNK1DCS.cbl",
+      "summary": "This program displays customer details, deletes the record if pf5 is pressed, or updates the record if pf10 is pressed."
+    },
+    {
+      "file": "BNK1TFN.cbl",
+      "summary": "This is the Transfer Funds between accounts program (in the same bank) in the BANKING application BMS suite."
+    },
+    {
+      "file": "BNK1UAC.cbl",
+      "summary": "This file is the Update Account program in the BANKING application."
+    },
+    {
+      "file": "BNKMENU.cbl",
+      "summary": "This program displays the map and allows the user to select an option, validates the option number/letter and returns with the appropriate transaction."
+    },
+    {
+      "file": "CRDTAGY1.cbl",
+      "summary": "This program is a dummy credit agency used for credit scoring. It delays for a random amount of time and creates a random credit score."
+    },
+    {
+      "file": "CRDTAGY2.cbl",
+      "summary": "This program is the dummy credit agency, used for credit scoring. Data is passed to the program via a channel and container and the role of this program is to delay for a random amount of time (between 0 and 3 seconds) and to create a random credit score (between 1 and 999), then finish."
+    },
+    {
+      "file": "CRDTAGY3.cbl",
+      "summary": "This program is the dummy credit agency, used for credit scoring. Data is passed to the program via a channel and container and the role of this program is to delay for a random amount of time (between 0 and 3 seconds) and to create a random credit score (between 1 and 999), then finish."
+    },
+    {
+      "file": "CRDTAGY4.cbl",
+      "summary": "This program is a dummy credit agency used for credit scoring. It delays for a random amount of time and creates a random credit score."
+    },
+    {
+      "file": "CRDTAGY5.cbl",
+      "summary": "This program is the dummy credit agency, used for credit scoring. Data is passed to the program via a channel and container and the role of this program is to delay for a random amount of time (between 0 and 3 seconds) and to create a random credit score (between 1 and 999), then finish."
+    },
+    {
+      "file": "CREACC.cbl",
+      "summary": "This program takes account information from the BMS application and updates the account datastore on DB2."
+    },
+    {
+      "file": "CRECUST.cbl",
+      "summary": "This program takes customer information, performs credit checks, and updates customer data."
+    },
+    {
+      "file": "DBCRFUN.cbl",
+      "summary": "This program processes cash transactions, retrieves account information from DB2, and updates the account balance. It also writes transaction records to the PROCTRAN datastore."
+    },
+    {
+      "file": "DELACC.cbl",
+      "summary": "This program takes an incoming account number it then accesses the account datastore and retrieves the associated account record matching on the customer number & the account_type and then deletes it."
+    },
+    {
+      "file": "DELCUS.cbl",
+      "summary": "This program takes an incoming customer number & retrieves the associated accounts for it and stores these in an array. Then it deletes the accounts one at a time and writes a PROCTRAN delete account record out for each deleted account. When all accounts have been deleted, it deletes the customer record (and writes out a customer delete record to PROCTRAN)."
+    },
+    {
+      "file": "GETCOMPY.cbl",
+      "summary": "This file contains a COBOL program that initializes the COMPANY-NAME variable with 'CICS Bank Sample Application'."
+    },
+    {
+      "file": "GETSCODE.cbl",
+      "summary": "This COBOL program retrieves a sort code based on a literal."
+    },
+    {
+      "file": "INQACC.cbl",
+      "summary": "This program takes an incoming account number. It then accesses the DB2 datastore & retrieves the associated account record/row matching on the account number & the account_type."
+    },
+    {
+      "file": "INQACCCU.cbl",
+      "summary": "This program takes an incoming customer number and determines which accounts it is associated with by accessing the datastore & retrieving the associated account records matching on the customer number"
+    },
+    {
+      "file": "INQCUST.cbl",
+      "summary": "This program takes customer number as input and returns to the calling program a commarea containing all of the customer information for that record."
+    },
+    {
+      "file": "UPDACC.cbl",
+      "summary": "This program updates account details in a DB2 datastore based on input account record fields."
+    },
+    {
+      "file": "UPDCUST.cbl",
+      "summary": "This program gets called when someone updates the customer details. It accesses the VSAM datastore."
+    },
+    {
+      "file": "XFRFUN.cbl",
+      "summary": "This program processes fund transfers based on account numbers and amounts."
+    }
+  ]
+}

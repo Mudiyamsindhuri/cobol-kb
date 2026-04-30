@@ -1,132 +1,87 @@
 from neo4j import GraphDatabase
 import json
-import re
+import os
+import requests
 
-URI = "bolt://localhost:7687"
+# =============================
+# CONFIG
+# =============================
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+KB_FILE = os.path.join(BASE_DIR, "kb", "kb.json")
+
+NEO4J_URI = "bolt://localhost:7687"
 USER = "neo4j"
 PASSWORD = "password"
 
-driver = GraphDatabase.driver(URI, auth=(USER, PASSWORD))
+OLLAMA_EMBED_URL = "http://localhost:11434/api/embeddings"
+EMBED_MODEL = "nomic-embed-text"
+
+driver = GraphDatabase.driver(NEO4J_URI, auth=(USER, PASSWORD))
 
 
 # =============================
-# CLEAN RELATION TYPE
+# EMBEDDINGS
 # =============================
-def clean_relation(rel):
-    if not rel:
-        return "RELATED_TO"
-
-    rel = rel.upper().strip()
-    rel = re.sub(r"[^A-Z0-9_]", "_", rel)  # remove spaces/symbols
-    return rel
+def get_embedding(text):
+    try:
+        res = requests.post(
+            OLLAMA_EMBED_URL,
+            json={"model": EMBED_MODEL, "prompt": text}
+        )
+        return res.json().get("embedding", [])
+    except Exception as e:
+        print("Embedding error:", e)
+        return []
 
 
 # =============================
-# CREATE GRAPH
+# NORMALIZE RELATION
 # =============================
-def create_graph(tx, item, summary_map):
+def normalize_relation(rel):
+    return rel.replace(" ", "_").upper()
 
-    nodes = item.get("nodes", [])
-    rels = item.get("relationships", [])
 
-    if not nodes:
-        return
+# =============================
+# BUILD GRAPH
+# =============================
+def create_graph(tx, data):
 
-    # 🔹 CREATE NODES
-    for node in nodes:
-        name = node.get("name")
-        ntype = node.get("type", "UNKNOWN")
+    # NODES
+    for n in data.get("nodes", []):
+        name = n["name"]
+        ntype = n["type"]
 
-        if not name:
-            continue
-
-        # attach description if exists
-        description = summary_map.get(name.upper(), "")
+        embedding = get_embedding(f"{name} {ntype}")
 
         tx.run("""
-            MERGE (n:Entity {name: $name})
-            SET n.type = $type,
-                n.description = $desc
-        """, name=name, type=ntype, desc=description)
+            MERGE (e:Entity {name:$name})
+            SET e.type = $type,
+                e.embedding = $embedding
+        """, name=name, type=ntype, embedding=embedding)
 
-    # CREATE RELATIONSHIPS
-    for rel in rels:
-        source = rel.get("source")
-        target = rel.get("target")
-        relation = clean_relation(rel.get("relation"))
+    # RELATIONSHIPS
+    for r in data.get("relationships", []):
 
-        if not source or not target:
-            continue
+        relation = normalize_relation(r["relation"])
 
-        query = f"""
-            MATCH (a:Entity {{name: $source}})
-            MATCH (b:Entity {{name: $target}})
+        tx.run(f"""
+            MATCH (a:Entity {{name:$s}})
+            MATCH (b:Entity {{name:$t}})
             MERGE (a)-[r:{relation}]->(b)
-        """
-
-        tx.run(query, source=source, target=target)
-
-
-# =============================
-# BUILD SUMMARY MAP
-# =============================
-def build_summary_map(data):
-    summary_map = {}
-
-    if isinstance(data, dict) and "summaries" in data:
-        for item in data["summaries"]:
-            file = item.get("file", "")
-            summary = item.get("summary", "")
-
-            program_name = file.split(".")[0].upper()
-            summary_map[program_name] = summary
-
-    return summary_map
+        """, s=r["source"], t=r["target"])
 
 
 # =============================
 # MAIN
 # =============================
 def main():
-
-    with open("kb.json", encoding="utf-8") as f:
+    with open(KB_FILE) as f:
         data = json.load(f)
 
-    # 🔹 BUILD SUMMARY MAP FIRST
-    summary_map = build_summary_map(data)
-
-    # 🔹 HANDLE SINGLE GRAPH FORMAT
-    if isinstance(data, dict):
-        print("Detected single graph format → converting")
-
-        data = [{
-            "program": "GLOBAL_GRAPH",
-            "nodes": data.get("nodes", []),
-            "relationships": data.get("relationships", [])
-        }]
-
-    elif not isinstance(data, list):
-        print("Invalid kb.json format")
-        return
-
     with driver.session() as session:
+        session.execute_write(create_graph, data)
 
-        for item in data:
-
-            if not isinstance(item, dict):
-                print("Skipping invalid item")
-                continue
-
-            if not item.get("nodes"):
-                print("Skipping empty graph")
-                continue
-
-            print("Pushing:", item.get("program"))
-
-            session.execute_write(create_graph, item, summary_map)
-
-    driver.close()
-    print("\n Data pushed to Neo4j successfully")
+    print(" Neo4j Graph + Embeddings Loaded Successfully")
 
 
 if __name__ == "__main__":
